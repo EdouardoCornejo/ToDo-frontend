@@ -14,7 +14,7 @@ const Todo = ({todo}) => {
                 <span className='border-solid border border-gray-500 rounded-full p-3 cursor-pointer'></span>
               )
             }
-            <p className='pl-3'>
+            <p className={'pl-3' + (completed && 'line-through')}>
                 {title}
             </p>
         </div>
