@@ -1,19 +1,17 @@
-import { useEffect, useState } from 'react';
-import Title from './components/Title'
-import TodoInput from './components/TodoInput';
-import TodoList from './components/TodoList';
+import { useEffect, useState } from "react";
+import Header from "./components/Header";
+import TodoInput from "./components/TodoInput";
+import TodoList from "./components/TodoList";
 import Navbar from "./components/Navbar";
-import api from './util/api'
+import api from "./util/api";
 import { useSelector } from "react-redux";
 import { notification } from "antd";
 import { AxiosError } from "axios";
 
-
-function App() {
+function AppTodo() {
   const accessToken = useSelector((state) => state.session.token);
   const [todos, setTodos] = useState([]);
-  
-  // getTodoList
+
   const getTodoList = async () => {
     try {
       const { data } = await api({
@@ -33,10 +31,9 @@ function App() {
     if (accessToken) getTodoList();
   }, [accessToken]);
 
-  const [activeFilter, setActiveFilter] = useState("all"); 
-  const [filteredTodos, setFilteredTodos] = useState(todos); 
+  const [activeFilter, setActiveFilter] = useState("all"); //Filter all from the list
+  const [filteredTodos, setFilteredTodos] = useState(todos); //stock copy of all initials
 
-// addTodo
   const addTodo = async (title, date) => {
     try {
       const { data, status } = await api({
@@ -75,7 +72,6 @@ function App() {
     }
   };
 
-// handleSetComplete
   const handleSetComplete = async (id, completed) => {
     try {
       const { status } = await api({
@@ -108,7 +104,6 @@ function App() {
     setTodos(updatedList);
   };
 
-// HandleDelete
   const handleDelete = async (id) => {
     // Filter to remove all
     try {
@@ -146,7 +141,6 @@ function App() {
     setTodos(updatedList);
   };
 
-  // handleClearComplete
   const handleClearComplete = async () => {
     try {
       const { status } = await api({
@@ -182,18 +176,18 @@ function App() {
     const updatedList = todos.filter((todo) => !todo.completed);
     setTodos(updatedList);
   };
-
+  
   const showAllTodos = () => {
-    setActiveFilter('all')
-  }
+    setActiveFilter("all");
+  };
 
   const showActiveTodos = () => {
-    setActiveFilter('active')
-  }
+    setActiveFilter("active");
+  };
 
   const showCompletedTodos = () => {
-    setActiveFilter('completed')
-  }
+    setActiveFilter("completed");
+  };
 
   useEffect(() => {
     if (activeFilter === "all") {
@@ -213,7 +207,7 @@ function App() {
 
       <div className="bg-white m-h-screen h-full font-inter text-gray-100 flex items-center justify-center py-10 px-5">
         <div className="rounded-xl container flex flex-col max-w-xl">
-          <Title />
+          <Header />
           <TodoInput addTodo={addTodo} />
           <TodoList
             todos={filteredTodos}
@@ -231,4 +225,4 @@ function App() {
   );
 }
 
-export default App;
+export default AppTodo;
