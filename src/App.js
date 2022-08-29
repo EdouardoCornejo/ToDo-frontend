@@ -5,7 +5,6 @@ import AppTodo from "./App.Todo"
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute"
 
 function App() {
-
     return (
     <BrowserRouter>
       <Routes>

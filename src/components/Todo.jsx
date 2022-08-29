@@ -1,9 +1,9 @@
 const Todo = ({todo, handleSetComplete, handleDelete}) => {
 
-    const {id, title, date, completed} = todo
-    
-    return (
-        <div className=' flex items-center justify-between px-4 py-2 bg-gray-700 border-bborder-solid border-gray-600'>
+  const { id, date, title, completed }= todo
+
+  return (
+    <div className=' flex items-center justify-between px-4 py-2 bg-gray-700 border-bborder-solid border-gray-600'>
             <div className=' flex items-center'>
                 {
                     completed ? (
@@ -23,7 +23,7 @@ const Todo = ({todo, handleSetComplete, handleDelete}) => {
             </div>
             <img onClick={() => handleDelete(id)} className='h-5 w-5 cursor-pointer transition-all duration-300 ease-in select-none' src='/close-icon.svg' alt='Close Icon' />  
         </div>
-    )
+  )
 }
 
 export default Todo

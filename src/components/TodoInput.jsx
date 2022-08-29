@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState } from 'react'
 import { notification } from "antd";
 
 const TodoInput = ({ addTodo }) => {
-  const [title, setTitle] = useState("");
-  const [date, setDate] = useState("");
+  const [title, setTitle] = useState ('');
+  const [date, setDate] = useState('');
 
   const handleAddTodo = (e) => {
     e.preventDefault();
@@ -42,6 +42,7 @@ const TodoInput = ({ addTodo }) => {
     }
   };
 
+
   return (
     <div className="mt-3 relative">
       <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"></div>
@@ -78,7 +79,7 @@ const TodoInput = ({ addTodo }) => {
         />
       </form>
     </div>
-  );
-};
+  )
+}
 
-export default TodoInput;
+export default TodoInput
