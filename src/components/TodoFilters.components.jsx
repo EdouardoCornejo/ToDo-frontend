@@ -3,7 +3,7 @@ import React from 'react'
 const FiltersContainer = ({children}) => {
   return (
     <div className='flex items-center justify-between p-4 bg-gray-700 border-b border-solid border-gray-600'>
-        {children}
+            {children}
     </div>
   )
 }
@@ -16,7 +16,7 @@ const ItemsLeft = ({total = 0}) => {
     )
 }
 
-const FilterButtonContainer = ({children}) => {
+const FilterButtonContainer = ({ children }) => {
     return(
         <div className='flex items-center space-x-2'>
             {children}
@@ -27,14 +27,14 @@ const FilterButtonContainer = ({children}) => {
 const FilterButton = ({ action, active, filter }) => {
     return (
         <button 
-        onClick={action}
-        className={`hover:text-white cursor-pointer px-1 transition-all duration-300 ease-in-out`
-        + (active.toLowerCase().includes(filter.toLowerCase()) ? 'text-indigo-700' : 'text-gray-400')
-        }> 
-            {filter}
+            onClick={action}
+            className={`hover:text-white cursor-pointer px-1 transition-all duration-300 ease-in-out`
+            + (active.toLowerCase().includes(filter.toLowerCase()) ? 'text-indigo-700' : 'text-gray-400')
+            }> 
+                {filter}
         </button>
     )
 }
 
 
-export {FiltersContainer, ItemsLeft, FilterButtonContainer, FilterButton}
+export { FiltersContainer, ItemsLeft, FilterButtonContainer, FilterButton }

@@ -2,51 +2,186 @@ import { useEffect, useState } from 'react';
 import Title from './components/Title'
 import TodoInput from './components/TodoInput';
 import TodoList from './components/TodoList';
+import Navbar from "./components/Navbar";
 import api from './util/api'
 import { useSelector } from "react-redux";
+import { notification } from "antd";
+import { AxiosError } from "axios";
+
 
 function App() {
-
+  const accessToken = useSelector((state) => state.session.token);
   const [todos, setTodos] = useState([]);
   
-  
+  // getTodoList
+  const getTodoList = async () => {
+    try {
+      const { data } = await api({
+        method: "Get",
+        url: "/todo",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      setTodos(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (accessToken) getTodoList();
+  }, [accessToken]);
 
   const [activeFilter, setActiveFilter] = useState("all"); 
   const [filteredTodos, setFilteredTodos] = useState(todos); 
 
-  const addTodo = (title) => {
-    const lastId = todos.length > 0 ? todos[todos.length - 1].id :1;
-
-    const newTodo = {
-      id: lastId +1,
-      title,
-      completed: false
-    }
-
-    const todoList = [...todos]
-    todoList.push(newTodo);
-    setTodos(todoList);
-  }
-
-  const handleSetComplete = (id) => {
-    const updatedList = todos.map(todo => {
-      if(todo.id === id){
-        return {...todo, completed: !todo.completed}
+// addTodo
+  const addTodo = async (title, date) => {
+    try {
+      const { data, status } = await api({
+        method: "post",
+        url: "/todo",
+        data: {
+          title,
+          date,
+        },
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      if (status === 201) {
+        notification.success({
+          message: "Success",
+          description: `Task added`,
+        });
+        if (status === 401) {
+          throw new AxiosError();
+        }
+        setTodos((previous) => [...previous, data]);
       }
-      return todo
-    })
-    setTodos(updatedList)
-  }
+    } catch (error) {
+      if (AxiosError) {
+        notification.warning({
+          message: "Unauthorized",
+          description: `Task not added`,
+        });
+      } else {
+        notification.error({
+          message: "Error",
+          description: `Task not added `,
+        });
+      }
+    }
+  };
 
-  const handleDelete = (id) => {
-    const updatedList = todos.filter(todo => todo.id !==id)
+// handleSetComplete
+  const handleSetComplete = async (id, completed) => {
+    try {
+      const { status } = await api({
+        method: "Put",
+        url: `/todo/${id}`,
+        data: {
+          completed,
+        },
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      if (status === 401) {
+        throw new AxiosError();
+      }
+    } catch (error) {
+      if (AxiosError) {
+        notification.error({
+          message: "Error",
+          description: `task not completed `,
+        });
+      }
+    }
+    const updatedList = await todos.map((todo) => {
+      if (todo.id === id) {
+        return { ...todo, completed: !todo.completed };
+      }
+      return todo;
+    });
     setTodos(updatedList);
-  }
+  };
 
-  const handleClearComplete = () => {
-    const updatedList = todos.filter(todo => !todo.completed)
-    setActiveFilter(updatedList)
-  }
+// HandleDelete
+  const handleDelete = async (id) => {
+    // Filter to remove all
+    try {
+      const { status } = await api({
+        method: "delete",
+        url: `/todo/${id}`,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      if (status === 202) {
+        notification.success({
+          message: "Success",
+          description: "Task deleted",
+        });
+      }
+      if (status === 401) {
+        throw new AxiosError();
+      }
+    } catch (error) {
+      if (AxiosError) {
+        notification.warning({
+          message: "Unauthorized",
+          description: `Task not deleted`,
+        });
+      } else {
+        console.log(error);
+        notification.error({
+          message: "Error",
+          description: "Task not deleted",
+        });
+      }
+    }
+    const updatedList = todos.filter((todo) => todo.id !== id);
+    setTodos(updatedList);
+  };
+
+  // handleClearComplete
+  const handleClearComplete = async () => {
+    try {
+      const { status } = await api({
+        method: "delete",
+        url: `/todo/`,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      console.log(status)
+      if (status === 202) {
+        notification.success({
+          message: "Success",
+          description: "Task deleted",
+        });
+      }
+      if(status === 500){
+        throw new AxiosError();
+      }
+    } catch (error) {
+      if (AxiosError) {
+          notification.warning({
+          message: "Unauthorized",
+          description: `You don't have completed tasks to delete`,
+        });
+      } else {
+        notification.error({
+          message: "Error",
+          description: "Task not deleted",
+        });
+      }
+    }
+    const updatedList = todos.filter((todo) => !todo.completed);
+    setTodos(updatedList);
+  };
 
   const showAllTodos = () => {
     setActiveFilter('all')
@@ -73,20 +208,24 @@ function App() {
   }, [activeFilter, todos]);
 
   return (
-    <div className='bg-gray-900 min-h-screen h-full font-inter text-gray-100 flex items-center justify-center py-20 px-5'>
-      <div className='container flex flex-col max-w-xl'>
-        <Title/>   
-        <TodoInput addTodo={addTodo}/>
-          <TodoList 
+    <div>
+      <Navbar />
+
+      <div className="bg-white m-h-screen h-full font-inter text-gray-100 flex items-center justify-center py-10 px-5">
+        <div className="rounded-xl container flex flex-col max-w-xl">
+          <Title />
+          <TodoInput addTodo={addTodo} />
+          <TodoList
             todos={filteredTodos}
             activeFilter={activeFilter}
-            handleSetComplete={handleSetComplete}  
+            handleSetComplete={handleSetComplete}
             handleDelete={handleDelete}
             showAllTodos={showAllTodos}
             showActiveTodos={showActiveTodos}
             showCompletedTodos={showCompletedTodos}
             handleClearComplete={handleClearComplete}
           />
+        </div>
       </div>
     </div>
   );
