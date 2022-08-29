@@ -2,26 +2,16 @@ import { useEffect, useState } from 'react';
 import Title from './components/Title'
 import TodoInput from './components/TodoInput';
 import TodoList from './components/TodoList';
+import api from './util/api'
+import { useSelector } from "react-redux";
 
 function App() {
 
-  const [todos, setTodos] = useState([
-    {id: 1,
-    title: 'watch movies on Netflix',
-    completed: 'false',
-    },
-    {
-      id: 2,
-      title: 'watch movies on Prime Video',
-      completed: 'false',
-    },
-    {
-      id: 3,
-      title: 'watch movies on Pluto Tv',
-      completed: 'false',
-    },
-  ])
+  const accessToken = useSelector((state) => state.session.token);
+  const [todos, setTodos] = useState([]);
   
+  
+
   const [activeFilter, setActiveFilter] = useState("all"); 
   const [filteredTodos, setFilteredTodos] = useState(todos); 
 
