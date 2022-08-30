@@ -2,9 +2,13 @@ import { useState } from "react";
 import { notification } from "antd";
 
 const TodoInput = ({ addTodo }) => {
+  /* A hook that allows you to use state in a functional component. */
   const [title, setTitle] = useState("");
   const [date, setDate] = useState("");
 
+  /**
+   * If the title and date are not empty, and the date is greater than today, then add the todo.
+   */
   const handleAddTodo = (e) => {
     e.preventDefault();
 
@@ -36,16 +40,21 @@ const TodoInput = ({ addTodo }) => {
     }
   };
 
+  /**
+   * If the key pressed is the enter key, then prevent the default action.
+   */
   const prevent = (e) => {
     if (e.key.toLowerCase() === "enter") {
       e.preventDefault();
     }
   };
 
+  /* The form that allows the user to add a todo. */
   return (
     <div className="mt-3 relative">
       <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"></div>
       <form onSubmit={handleAddTodo} className="bg-white rounded-lg mb-6 ">
+        {/* An input field that allows the user to enter a title for the todo. */}
         <input
           type="text"
           id="text"
@@ -60,6 +69,7 @@ const TodoInput = ({ addTodo }) => {
           Select a date to do:
         </span>
 
+        {/* An input field that allows the user to enter a date for the todo. */}
         <input
           type="date"
           id="date"
@@ -70,6 +80,7 @@ const TodoInput = ({ addTodo }) => {
           onChange={(e) => setDate(e.target.value)}
         />
 
+        {/* A submit button that allows the user to submit the form. */}
         <input
           type="submit"
           className="flex  absolute bg-gray-500 w-md px-6 py-2 mt-1 text-white uppercase font-bold 

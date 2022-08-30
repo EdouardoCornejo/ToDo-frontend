@@ -1,22 +1,23 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice } from "@reduxjs/toolkit";
+/* Setting the initial state of the reducer. */
 const initialState = {
-  token: undefined
-}
+  token: undefined,
+};
 
+/* Creating a reducer. */
 export const sessionSlice = createSlice({
-  name: 'session',
+  name: "session",
   initialState,
   reducers: {
     setToken: (state, action) => {
       state.token = action.payload;
     },
     logout: (state) => {
-      state.token = undefined
-    } 
+      state.token = undefined;
+    },
   },
-})
+});
 
-// Action creators are generated for each case reducer function
-export const { setToken, logout } = sessionSlice.actions
+export const { setToken, logout } = sessionSlice.actions;
 
-export default sessionSlice.reducer
+export default sessionSlice.reducer;
